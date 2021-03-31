@@ -81,7 +81,7 @@ public class UsageTest {
 			final TestEntity e = new TestEntity(0, null, OffsetDateTime.now());
 			e.insert(conn,
 				TestEntity.Columns.id.omit(),
-				TestEntity.Columns.time.CURRENT_TIMESTAMP(),
+				TestEntity.Columns.time.NULL(),
 				TestEntity.Columns.value.expression("'value'"));
 			e.updateByCtid(conn);
 			e.deleteByCtid(conn);

@@ -52,8 +52,4 @@ public abstract class AbstractColumn<T extends AbstractTable, C extends Abstract
 		return new SqlExpression(this, "NULL");
 	}
 
-	public SqlExpression<T, C> OLD() {
-		return new SqlExpression(this, "OLD.\"" + name + "\"");
-	}
-
 }
