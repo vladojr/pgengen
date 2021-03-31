@@ -50,11 +50,10 @@ public class UsageTest {
 			e.insert(conn, TestEntity.Columns.id.DEFAULT());
 			assert TestEntity.first(conn, "where value='value'") != null;
 
-			e.value = "value2";
 			e.updateByCtid(conn,
-				TestEntity.Columns.id.OLD(),
-				TestEntity.Columns.value.NULL(),
-				TestEntity.Columns.time.NULL());
+				TestEntity.Columns.id.omit(),
+				TestEntity.Columns.value.expression("'value2'"),
+				TestEntity.Columns.time.DEFAULT());
 			assert TestEntity.first(conn, "where value='value2'") != null;
 
 			TestEntity.each(conn, (i, ntt) -> {
@@ -73,6 +72,19 @@ public class UsageTest {
 
 		try (final Connection conn = GenTest.getConnectionNoAutocommit()) {
 			assertThrows(RecordNotLoadedException.class, () -> e.updateByCtid(conn));
+		}
+	}
+
+	@Test
+	public void testUpdateDelete() throws Exception {
+		try (final Connection conn = GenTest.getConnectionNoAutocommit()) {
+			final TestEntity e = new TestEntity(0, null, OffsetDateTime.now());
+			e.insert(conn,
+				TestEntity.Columns.id.omit(),
+				TestEntity.Columns.time.CURRENT_TIMESTAMP(),
+				TestEntity.Columns.value.expression("'value'"));
+			e.updateByCtid(conn);
+			e.deleteByCtid(conn);
 		}
 	}
 
