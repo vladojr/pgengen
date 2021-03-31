@@ -51,8 +51,15 @@ public class UsageTest {
 			assert TestEntity.first(conn, "where value='value'") != null;
 
 			e.value = "value2";
-			e.updateByCtid(conn);
+			e.updateByCtid(conn,
+				TestEntity.Columns.id.OLD(),
+				TestEntity.Columns.value.NULL(),
+				TestEntity.Columns.time.NULL());
 			assert TestEntity.first(conn, "where value='value2'") != null;
+
+			TestEntity.each(conn, (i, ntt) -> {
+				System.out.println(i + ": " + ntt.value);
+			}, "where value like ?", "%value%");
 		}
 	}
 
@@ -74,8 +81,11 @@ public class UsageTest {
 		final TestEntity e1;
 
 		try (final Connection conn = GenTest.getConnectionNoAutocommit()) {
-			e1 = new TestEntity(0, "value", OffsetDateTime.now());
-			e1.insert(conn, TestEntity.Columns.id.omit());
+			e1 = new TestEntity(0, null, OffsetDateTime.now());
+			e1.insert(conn,
+				TestEntity.Columns.id.omit(),
+				TestEntity.Columns.time.CURRENT_TIMESTAMP(),
+				TestEntity.Columns.value.expression("'value'"));
 			conn.commit();
 		}
 

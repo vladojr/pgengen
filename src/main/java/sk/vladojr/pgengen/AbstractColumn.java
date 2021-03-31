@@ -48,12 +48,8 @@ public abstract class AbstractColumn<T extends AbstractTable, C extends Abstract
 		return new SqlExpression(this, "CURRENT_TIMESTAMP");
 	}
 
-	public SqlExpression<T, C> nextCid() {
-		return new SqlExpression(this, "pgr.next_cid()");
-	}
-
 	public SqlExpression<T, C> NULL() {
-		return new SqlExpression(this, "CURRENT_TIMESTAMP");
+		return new SqlExpression(this, "NULL");
 	}
 
 	public SqlExpression<T, C> OLD() {
